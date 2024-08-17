@@ -1,6 +1,15 @@
 from rest_framework import serializers
 from .models import User
-from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from rest_framework import status, views
+from rest_framework.response import Response
+from rest_framework.serializers import Serializer, EmailField
+from django.conf import settings
+from django.urls import reverse
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -50,9 +59,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
-        """
-        Обновление существующего пользователя, включая возможность изменения пароля.
-        """
         instance.username = validated_data.get('username', instance.username)
         instance.email = validated_data.get('email', instance.email)
         instance.role = validated_data.get('role', instance.role)
@@ -66,3 +72,12 @@ class UserSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(write_only=True)

@@ -6,7 +6,7 @@ class User(AbstractUser):
         ('waiter', 'Waiter'),
         ('manager', 'Manager'),
         ('admin', 'Admin'),
-        ('buyer', 'Buyer'),  # Добавляем новую роль 'buyer'
+        ('buyer', 'Buyer'),
     ]
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='waiter')
     salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
