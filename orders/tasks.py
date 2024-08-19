@@ -8,10 +8,6 @@ from orders.models import Order, OrderDish
 from celery import shared_task
 
 @shared_task
-def Hi():
-    print('ho')
-
-@shared_task
 def generate_report():
     today = timezone.now().date()
     formatted_date = today.strftime('%Y-%m-%d')
@@ -48,4 +44,3 @@ def generate_report():
         report_file.write(report_content)
 
     print(f"Отчет сохранен в {report_filepath}")
-
