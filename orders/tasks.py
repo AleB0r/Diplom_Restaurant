@@ -48,3 +48,4 @@ def generate_report():
         report_file.write(report_content)
 
     print(f"Отчет сохранен в {report_filepath}")
+
