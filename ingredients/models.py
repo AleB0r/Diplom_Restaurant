@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from suppliers.models import Supplier  # Импортируем модель Supplier из приложения suppliers
+from suppliers.models import Supplier
 
 class Ingredient(models.Model):
     MEASUREMENT_CHOICES = [
@@ -10,7 +10,7 @@ class Ingredient(models.Model):
     ]
 
     name = models.CharField(max_length=100)
-    quantity = models.PositiveIntegerField()  # Например, общее количество ингредиента
+    quantity = models.PositiveIntegerField()
     measurement_unit = models.CharField(max_length=3, choices=MEASUREMENT_CHOICES, default='kg')
 
     def __str__(self):

@@ -28,11 +28,9 @@ class PurchaseViewSet(viewsets.ViewSet):
         ingredient = serializer.validated_data['ingredient']
         quantity = serializer.validated_data['quantity']
 
-        # Увеличение количества ингредиента на складе
         ingredient.quantity += quantity
         ingredient.save()
 
-        # Отправка email поставщику
         subject = f'Запрос на покупку {ingredient.name}'
         message = (
             f'Пользователь {request.user.username} хочет купить {quantity} '

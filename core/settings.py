@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
+from celery import Celery
+import psycopg2
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,6 +31,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_celery_beat',
 
     'rest_framework',
     'rest_framework_simplejwt',
@@ -61,6 +68,7 @@ INSTALLED_APPS = [
 #     ),
 # }
 
+
 # Настройки JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=360),
@@ -68,7 +76,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': 'your-secret-key',  # Используйте ваш секретный ключ
+    'SIGNING_KEY': 'your-secret-key',
     'VERIFYING_KEY': None,
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
@@ -82,10 +90,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False  # Убедитесь, что только один из USE_TLS или USE_SSL установлен на True
-EMAIL_HOST_USER = 'sasha2014993@gmail.com'  # Ваш Gmail адрес
-EMAIL_HOST_PASSWORD = 'oeah kvoq clzp hzoc '  # Пароль приложения (не ваш обычный пароль)
-DEFAULT_FROM_EMAIL = 'sasha2014993@gmail.com'  # Адрес "от кого" по умолчанию
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'sasha2014993@gmail.com'
+EMAIL_HOST_PASSWORD = 'oeah kvoq clzp hzoc '
+DEFAULT_FROM_EMAIL = 'sasha2014993@gmail.com'
 
 
 
@@ -127,10 +135,15 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
@@ -173,3 +186,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # URL вашего брокера сообщений
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # URL для сохранения результатов задач (по желанию)
+CELERY_BEAT_SCHEDULE = {}  # Вы можете оставить пустым, если планируете использовать Django admin
+
+# Создание экземпляра Celery
+celery_app = Celery('core')
+celery_app.config_from_object('django.conf:settings', namespace='CELERY')
+celery_app.autodiscover_tasks()

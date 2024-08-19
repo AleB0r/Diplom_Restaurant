@@ -11,7 +11,6 @@ class TableViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def toggle_status(self, request, pk=None):
-        """Переключает статус доступности столика."""
         table = self.get_object()
         table.toggle_availability()
         return Response({'status': 'success', 'is_available': table.is_available}, status=status.HTTP_200_OK)

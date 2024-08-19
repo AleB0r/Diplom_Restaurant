@@ -15,7 +15,6 @@ class Table(models.Model):
         super().save(*args, **kwargs)
 
     def toggle_availability(self):
-        """Переключает статус доступности столика."""
         self.is_available = not self.is_available
         self.save()
 
