@@ -1,6 +1,11 @@
+from datetime import date
+
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+
+from users.permissions import IsAdminOrManager
 from .models import Reservation
 from .serializers import ReservationSerializer
 from django.core.exceptions import ValidationError
@@ -8,6 +13,7 @@ from django.core.exceptions import ValidationError
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
+    permission_classes = [IsAdminOrManager]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -34,3 +40,10 @@ class ReservationViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=['get'])
+    def today(self, request):
+        today = date.today()
+        queryset = self.get_queryset().filter(reservation_time__date=today)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

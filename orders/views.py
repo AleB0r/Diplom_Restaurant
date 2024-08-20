@@ -1,15 +1,18 @@
+from datetime import date
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
+from users.permissions import IsAdminOrWaiter
 from .models import Order
-from .serializers import OrderSerializer
+from .serializers import OrderSerializer, OrderDishSerializer
+
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAdminOrWaiter]
 
     def get_queryset(self):
         return Order.objects.all()
@@ -27,6 +30,28 @@ class OrderViewSet(viewsets.ModelViewSet):
             order.save()
             return Response({'status': 'Order status updated successfully.'}, status=status.HTTP_200_OK)
 
+        except Order.DoesNotExist:
+            return Response({'detail': 'Order not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=False, methods=['get'], url_path='in-progress')
+    def in_progress_orders(self, request):
+        queryset = self.get_queryset().filter(status__in=['pending'])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='completed')
+    def completed_orders(self, request):
+        queryset = self.get_queryset().filter(status__in=['completed'])
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'], url_path='dishes')
+    def order_dishes(self, request, pk=None):
+        try:
+            order = self.get_object()
+            dishes = order.order_dishes
+            serializer = OrderDishSerializer(dishes, many=True)
+            return Response(serializer.data)
         except Order.DoesNotExist:
             return Response({'detail': 'Order not found.'}, status=status.HTTP_404_NOT_FOUND)
 

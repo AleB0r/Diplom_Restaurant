@@ -4,6 +4,6 @@ djangorestframework-simplejwt==5.3.1
 pytz==2024.1
 flower==2.0.1
 twilio==9.2.3
-redis
-celery
-django_celery_beat
+redis==5.0.8
+celery==5.4.0
+django_celery_beat==2.6.0

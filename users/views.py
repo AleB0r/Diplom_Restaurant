@@ -9,13 +9,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import User
+from .permissions import IsAdminUser
+
 from .serializers import UserSerializer, PasswordResetRequestSerializer, PasswordResetConfirmSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser]
 
 
 class PasswordResetRequestView(APIView):

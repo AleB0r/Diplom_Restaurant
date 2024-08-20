@@ -1,9 +1,10 @@
 from django.core.mail import send_mail
 from rest_framework import viewsets, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from core import settings
+from users.permissions import IsAdminOrManager, IsAdminOrPurchaser
 from .models import Ingredient, SupplierIngredient
 from .serializers import IngredientSerializer, SupplierIngredientSerializer, PurchaseSerializer
 
@@ -11,13 +12,14 @@ from .serializers import IngredientSerializer, SupplierIngredientSerializer, Pur
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrManager]
 
 
 class SupplierIngredientViewSet(viewsets.ModelViewSet):
     queryset = SupplierIngredient.objects.all()
     serializer_class = SupplierIngredientSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrPurchaser]
+
 
 
 class PurchaseViewSet(viewsets.ViewSet):
