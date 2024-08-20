@@ -9,5 +9,5 @@ class ClientSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         if Client.objects.filter(email=value).exists():
-            raise serializers.ValidationError('Клиент с таким email уже существует.')
+            raise serializers.ValidationError('A client with this email already exists.')
         return value

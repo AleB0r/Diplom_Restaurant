@@ -8,7 +8,7 @@ class Table(models.Model):
 
     def clean(self):
         if self.seats <= 0:
-            raise ValidationError('Количество сидений должно быть больше 0.')
+            raise ValidationError('The number of seats must be greater than 0.')
 
     def save(self, *args, **kwargs):
         self.clean()

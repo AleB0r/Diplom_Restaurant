@@ -17,24 +17,22 @@ class ReservationSerializer(serializers.ModelSerializer):
         fields = ['id', 'client_id', 'table_id', 'reservation_time', 'number_of_people', 'table_number']
 
     def validate_reservation_time(self, value):
-        """Проверка времени бронирования."""
         now = datetime.now(pytz.utc)
         start_time = datetime.combine(now.date(), time(9, 0), tzinfo=pytz.utc)
         end_time = datetime.combine(now.date() + timedelta(days=1), time(21, 0), tzinfo=pytz.utc)
 
         if value.minute % 30 != 0:
-            raise serializers.ValidationError('Время бронирования должно быть кратным 30 минутам.')
+            raise serializers.ValidationError('Booking time must be a multiple of 30 minutes.')
 
         if not (start_time <= value <= end_time):
-            raise serializers.ValidationError('Время бронирования должно быть между 09:00 и 21:00.')
+            raise serializers.ValidationError('Reservation time must be between 09:00 and 21:00.')
 
         if value < now:
-            raise serializers.ValidationError('Время бронирования не может быть в прошлом.')
+            raise serializers.ValidationError('The booking time cannot be in the past.')
 
         return value
 
     def validate(self, data):
-        """Проверка пересечения бронирований и других условий."""
         reservation_time = data.get('reservation_time')
         table = data.get('table')
 
@@ -47,10 +45,10 @@ class ReservationSerializer(serializers.ModelSerializer):
             ).exclude(id=self.instance.id if self.instance else None)
 
             if reservations.exists():
-                raise serializers.ValidationError('Этот столик уже забронирован на это время или в его пределах.')
+                raise serializers.ValidationError('This table is already booked for this time or within it.')
 
             if data.get('number_of_people') > table.seats:
-                raise serializers.ValidationError('Число сидящих не может превышать количество мест за столом.')
+                raise serializers.ValidationError('The number of people seated cannot exceed the number of seats at the table.')
 
         return data
 

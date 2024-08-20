@@ -31,10 +31,10 @@ def generate_report():
     )['average_check'] or 0
 
     report_content = (
-        f"Отчет за {today}\n"
-        f"Суммарная прибыль: {total_revenue:.2f} рублей\n"
-        f"Количество заказов: {total_orders}\n"
-        f"Средняя цена чека: {average_check:.2f} рублей\n"
+        f"Report for {today}\n"
+        f"Total profit: {total_revenue:.2f} rubles\n"
+        f"Number of orders: {total_orders}\n"
+        f"Average check price: {average_check:.2f} rubles\n"
     )
 
     report_filename = f"daily_report_{formatted_date}.txt"
@@ -43,4 +43,4 @@ def generate_report():
     with open(report_filepath, 'w') as report_file:
         report_file.write(report_content)
 
-    print(f"Отчет сохранен в {report_filepath}")
+    print(f"The report is saved in {report_filepath}")

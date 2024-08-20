@@ -31,11 +31,11 @@ class PurchaseViewSet(viewsets.ViewSet):
         ingredient.quantity += quantity
         ingredient.save()
 
-        subject = f'Запрос на покупку {ingredient.name}'
+        subject = f'Purchase request {ingredient.name}'
         message = (
-            f'Пользователь {request.user.username} хочет купить {quantity} '
-            f'{ingredient.get_measurement_unit_display()} {ingredient.name} у вас.\n'
-            f'Пожалуйста, свяжитесь с ним для уточнения деталей.'
+            f'User {request.user.username} wants to buy {quantity}'
+            f'{ingredient.get_measurement_unit_display()} {ingredient.name} you have.\n'
+            f'Please contact him for details.'
         )
         send_mail(
             subject,
@@ -45,4 +45,4 @@ class PurchaseViewSet(viewsets.ViewSet):
             fail_silently=False,
         )
 
-        return Response({'status': 'Запрос отправлен поставщику, количество ингредиента обновлено'}, status=status.HTTP_201_CREATED)
+        return Response({'status': 'Request sent to supplier, ingredient quantity updated'}, status=status.HTTP_201_CREATED)

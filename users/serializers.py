@@ -17,18 +17,13 @@ class UserSerializer(serializers.ModelSerializer):
 
         if password or password_confirm:
             if password != password_confirm:
-                raise serializers.ValidationError({"password": "Пароли не совпадают."})
+                raise serializers.ValidationError({"password": "The passwords do not match."})
 
 
         return data
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
-        password_confirm = validated_data.pop('password_confirm', None)
-
-        if password and password_confirm:
-            if password != password_confirm:
-                raise serializers.ValidationError({"password": "Пароли не совпадают."})
 
         user = User(
             username=validated_data['username'],

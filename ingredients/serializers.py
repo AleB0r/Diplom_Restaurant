@@ -11,7 +11,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
     def validate_quantity(self, value):
         if value <= 0:
-            raise serializers.ValidationError('Количество должно быть положительным числом.')
+            raise serializers.ValidationError('The quantity must be a positive number.')
         return value
 
 
@@ -31,20 +31,18 @@ class SupplierIngredientSerializer(serializers.ModelSerializer):
         return obj.ingredient.name
 
     def validate_price_per_unit(self, value):
-        """Проверка на положительное значение цены."""
         if value <= 0:
-            raise serializers.ValidationError('Цена за единицу должна быть положительным числом.')
+            raise serializers.ValidationError('The unit price must be a positive number.')
         return value
 
     def validate(self, data):
-        """Проверка на уникальность ингредиента для поставщика."""
         supplier = data.get('supplier')
         ingredient = data.get('ingredient')
 
         if supplier and ingredient:
             if SupplierIngredient.objects.filter(supplier=supplier, ingredient__name__iexact=ingredient.name).exists():
                 raise serializers.ValidationError(
-                    f'Поставщик {supplier.name} уже поставляет ингредиент с именем {ingredient.name}.'
+                    f'The supplier {supplier.name} already supplies the ingredient named {ingredient.name}.'
                 )
         return data
 
@@ -62,7 +60,7 @@ class PurchaseSerializer(serializers.Serializer):
         try:
             supplier_ingredient = SupplierIngredient.objects.get(supplier=supplier, ingredient=ingredient)
         except SupplierIngredient.DoesNotExist:
-            raise serializers.ValidationError(f'Поставщик {supplier.name} не предлагает ингредиент {ingredient.name}.')
+            raise serializers.ValidationError(f'Supplier {supplier.name} does not offer ingredient {ingredient.name}.')
 
         return data
 

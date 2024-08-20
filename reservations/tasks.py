@@ -26,7 +26,7 @@ def check_reservations_and_send_sms():
 
     for reservation in reservations:
         if reservation.client.phone_number:
-            message_body = f'Уважаемый {reservation.client.first_name}, у вас забронирован столик №{reservation.table.number} на {reservation.reservation_time}.'
+            message_body = f'Dear {reservation.client.first_name}, you have reserved table No.{reservation.table.number} at {reservation.reservation_time}.'
             send_sms(reservation.client.phone_number, message_body)
 
 

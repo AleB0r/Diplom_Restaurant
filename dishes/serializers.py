@@ -11,9 +11,8 @@ class DishIngredientSerializer(serializers.ModelSerializer):
         fields = ['ingredient', 'ingredient_name', 'quantity']
 
     def validate_quantity(self, value):
-        """Проверка, что количество ингредиента больше 0"""
         if value <= 0:
-            raise serializers.ValidationError('Количество ингредиента должно быть больше 0.')
+            raise serializers.ValidationError('The amount of the ingredient must be greater than 0.')
         return value
 
 
@@ -25,9 +24,8 @@ class DishSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'price', 'ingredients']
 
     def validate_price(self, value):
-        """Проверка, что цена блюда больше 0"""
         if value <= 0:
-            raise serializers.ValidationError('Цена блюда должна быть больше 0.')
+            raise serializers.ValidationError('The price of the dish must be greater than 0.')
         return value
 
     def create(self, validated_data):

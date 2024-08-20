@@ -33,7 +33,7 @@ class OrderSerializer(serializers.ModelSerializer):
                     required_quantity = dish_ingredient.quantity * dish_data['quantity']
                     if not self.check_ingredients(dish_ingredient.ingredient, required_quantity):
                         raise serializers.ValidationError(
-                            f"Недостаточно {dish_ingredient.ingredient.name} для блюда {dish_instance.name}"
+                            f"Not enough {dish_ingredient.ingredient.name} for dish {dish_instance.name}"
                         )
         return data
 
@@ -72,9 +72,9 @@ class OrderSerializer(serializers.ModelSerializer):
                 ingredient_instance.quantity -= quantity
                 ingredient_instance.save()
             else:
-                raise serializers.ValidationError(f"Недостаточно {ingredient.name} для списания.")
+                raise serializers.ValidationError(f"Not enough {ingredient.name} to write off.")
         except Ingredient.DoesNotExist:
-            raise serializers.ValidationError(f"Ингредиент {ingredient.name} не найден.")
+            raise serializers.ValidationError(f"Ingredient {ingredient.name} not found.")
 
     def add_ingredients(self, ingredient, quantity):
         try:
@@ -82,7 +82,7 @@ class OrderSerializer(serializers.ModelSerializer):
             ingredient_instance.quantity += quantity
             ingredient_instance.save()
         except Ingredient.DoesNotExist:
-            raise serializers.ValidationError(f"Ингредиент {ingredient.name} не найден.")
+            raise serializers.ValidationError(f"Ingredient {ingredient.name} not found.")
 
     def update(self, instance, validated_data):
         old_order_dishes = instance.order_dishes.all()

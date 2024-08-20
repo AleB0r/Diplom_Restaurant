@@ -26,7 +26,7 @@ class SupplierIngredient(models.Model):
 
     def clean(self):
         if self.price_per_unit <= 0:
-            raise ValidationError('Цена за единицу должна быть положительным числом.')
+            raise ValidationError('The unit price must be a positive number.')
 
     def __str__(self):
         return f'{self.supplier.name} - {self.ingredient.name} @ {self.price_per_unit}'

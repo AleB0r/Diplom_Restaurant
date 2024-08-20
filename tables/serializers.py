@@ -9,5 +9,5 @@ class TableSerializer(serializers.ModelSerializer):
 
     def validate_seats(self, value):
         if value <= 0:
-            raise serializers.ValidationError('Количество сидений должно быть больше 0.')
+            raise serializers.ValidationError('The number of seats must be greater than 0.')
         return value
