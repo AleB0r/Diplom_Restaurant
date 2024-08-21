@@ -5,7 +5,8 @@ from twilio.rest import Client
 
 from reservations.models import Reservation
 
-
+account_sid = 'AC417af06a5571ac88b40df63201df6f16'
+auth_token = '65f4049a88668140c3d0190d404a0979'
 client = Client(account_sid, auth_token)
 
 @shared_task
