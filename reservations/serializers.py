@@ -19,13 +19,13 @@ class ReservationSerializer(serializers.ModelSerializer):
     def validate_reservation_time(self, value):
         now = datetime.now(pytz.utc)
         start_time = datetime.combine(now.date(), time(9, 0), tzinfo=pytz.utc)
-        end_time = datetime.combine(now.date() + timedelta(days=1), time(21, 0), tzinfo=pytz.utc)
+        end_time = datetime.combine(now.date() + timedelta(days=1), time(23, 0), tzinfo=pytz.utc)
 
         if value.minute % 30 != 0:
             raise serializers.ValidationError('Booking time must be a multiple of 30 minutes.')
 
         if not (start_time <= value <= end_time):
-            raise serializers.ValidationError('Reservation time must be between 09:00 and 21:00.')
+            raise serializers.ValidationError('Reservation time must be between 09:00 and 23:00.')
 
         if value < now:
             raise serializers.ValidationError('The booking time cannot be in the past.')

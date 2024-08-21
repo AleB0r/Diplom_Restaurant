@@ -44,6 +44,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def today(self, request):
         today = date.today()
+        print(today)
         queryset = self.get_queryset().filter(reservation_time__date=today)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
